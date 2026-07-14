@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>STV Master Control</title>
+
+<style>
+:root{
+--sunflower:#F6C945;
+--brown:#5B371A;
+--cream:#FFF7E6;
+--green:#4F8A10;
+--red:#B22222;
+}
+
+body{
+margin:0;
+font-family:Arial,sans-serif;
+background:var(--cream);
+}
+
+header{
+background:var(--brown);
+color:var(--sunflower);
+padding:25px;
+text-align:center;
+border-bottom:8px solid var(--sunflower);
+}
+
+header h1{
+font-size:42px;
+margin:0;
+}
+
+.dashboard{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+gap:20px;
+padding:25px;
+}
+
+.card{
+background:white;
+border:4px solid var(--brown);
+border-radius:18px;
+padding:20px;
+box-shadow:0 8px 15px #0002;
+}
+
+h2{
+color:var(--brown);
+border-bottom:3px solid var(--sunflower);
+padding-bottom:8px;
+}
+
+button{
+background:var(--sunflower);
+color:var(--brown);
+padding:12px 18px;
+border:none;
+border-radius:10px;
+font-weight:bold;
+cursor:pointer;
+margin:5px;
+}
+
+button:hover{
+transform:scale(1.05);
+}
+
+input,textarea{
+width:100%;
+padding:10px;
+border:2px solid var(--brown);
+border-radius:8px;
+margin:5px 0;
+}
+
+.live{
+background:var(--green);
+color:white;
+padding:10px;
+border-radius:20px;
+display:inline-block;
+}
+
+.offline{
+background:var(--red);
+color:white;
+padding:10px;
+border-radius:20px;
+display:inline-block;
+}
+
+.episode{
+background:#fff3c4;
+padding:12px;
+border-left:5px solid var(--brown);
+margin-top:10px;
+border-radius:8px;
+}
+  #pipelineBoard{
+display:flex;
+gap:15px;
+overflow:auto;
+}
+
+.stage{
+min-width:160px;
+background:#fff3c4;
+padding:15px;
+border-radius:12px;
+border:2px solid var(--brown);
+}
+
+.contentCard{
+background:white;
+padding:10px;
+margin-top:10px;
+border-radius:8px;
+border-left:5px solid var(--brown);
+}
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+<h1>🌻 STV MASTER CONTROL</h1>
+
+<p>Broadcast • Create • Document • Build</p>
+
+<div id="status" class="offline">
+🔴 STANDBY
+</div>
+
+</header>
+
+
+<div class="dashboard">
+
+
+<div class="card">
+
+<h2>🎥 Control Room</h2>
+
+<p>Channel</p>
+<input id="channel" value="STV Channel 1">
+
+<p>Current Show</p>
+<input id="show" placeholder="Example: Cruise Muse">
+
+<button onclick="goLive()">
+GO LIVE
+</button>
+
+<button onclick="standby()">
+STANDBY
+</button>
+
+  <div class="card">
+
+<h2>📰 Newsroom Pipeline</h2>
+
+<p>Create Content Card</p>
+
+<input id="contentName" placeholder="Content title">
+
+<select id="contentStage">
+<option>IDEA</option>
+<option>SCRIPT</option>
+<option>SHOOT</option>
+<option>EDIT</option>
+<option>THUMBNAIL</option>
+<option>SCHEDULE</option>
+<option>PUBLISHED</option>
+</select>
+
+<button onclick="addContent()">
++ ADD TO PIPELINE
+</button>
+
+
+<div id="pipelineBoard">
+
+<div class="stage">
+<h3>💡 IDEA</h3>
+<div id="idea"></div>
+</div>
+
+<div class="stage">
+<h3>📝 SCRIPT</h3>
+<div id="script"></div>
+</div>
+
+<div class="stage">
+<h3>🎥 SHOOT</h3>
+<div id="shoot"></div>
+</div>
+
+<div class="stage">
+<h3>✂️ EDIT</h3>
+<div id="edit"></div>
+</div>
+
+<div class="stage">
+<h3>🚀 PUBLISHED</h3>
+<div id="published"></div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<div class="card">
+
+<h2>🎬 Episode Builder</h2>
+
+<input id="episodeTitle" placeholder="Episode title">
+
+<textarea id="episodeDesc"
+placeholder="Episode description"></textarea>
+
+<button onclick="createEpisode()">
++ CREATE EPISODE
+</button>
+
+<div id="episodes"></div>
+
+</div>
+
+
+<div class="card">
+
+<h2>📓 Founder's Log</h2>
+
+<textarea id="log"
+placeholder="What happened today?"></textarea>
+
+<button onclick="saveLog()">
+SAVE ENTRY
+</button>
+
+<p id="saved"></p>
+
+</div>
+
+
+<div class="card">
+
+<h2>📊 Creator Scoreboard</h2>
+
+<h3>
+Episodes Created:
+<span id="count">0</span>
+</h3>
+
+<h3>
+System:
+ONLINE
+</h3>
+
+</div>
+
+
+<div class="card">
+
+<h2>📺 STV Universe</h2>
+
+<ul>
+<li>🌊 STV Travel</li>
+<li>🍽 STV Food</li>
+<li>🎙 Interviews</li>
+<li>🎵 Radiomeltdown</li>
+<li>🎮 STV Gaming</li>
+<li>🌱 Real Life</li>
+<li>💡 SENSTACK</li>
+</ul>
+
+</div>
+
+
+</div>
+
+
+
+<script>
+
+let episodes =
+JSON.parse(localStorage.getItem("stvEpisodes")) || [];
+
+
+function updateEpisodes(){
+
+let box=document.getElementById("episodes");
+
+box.innerHTML="";
+
+episodes.forEach(ep=>{
+
+box.innerHTML += `
+<div class="episode">
+<b>${ep.title}</b>
+<br>
+${ep.desc}
+</div>
+`;
+
+});
+
+document.getElementById("count").innerHTML=
+episodes.length;
+
+}
+
+
+function createEpisode(){
+
+let title=
+document.getElementById("episodeTitle").value;
+
+let desc=
+document.getElementById("episodeDesc").value;
+
+
+episodes.push({
+title:title,
+desc:desc
+});
+
+
+localStorage.setItem(
+"stvEpisodes",
+JSON.stringify(episodes)
+);
+
+
+updateEpisodes();
+
+}
+
+
+function goLive(){
+
+let s=document.getElementById("status");
+
+s.className="live";
+s.innerHTML="🟢 LIVE";
+
+}
+
+
+function standby(){
+
+let s=document.getElementById("status");
+
+s.className="offline";
+s.innerHTML="🔴 STANDBY";
+
+}
+
+
+function saveLog(){
+
+let text=
+document.getElementById("log").value;
+
+
+localStorage.setItem(
+"founderLog",
+text
+);
+
+
+document.getElementById("saved").innerHTML=
+"🌻 Saved to STV Archive";
+
+}
+
+
+updateEpisodes();
+
+let content =
+JSON.parse(localStorage.getItem("stvPipeline")) || [];
+
+
+function addContent(){
+
+let name =
+document.getElementById("contentName").value;
+
+let stage =
+document.getElementById("contentStage").value;
+
+
+content.push({
+name:name,
+stage:stage
+});
+
+
+localStorage.setItem(
+"stvPipeline",
+JSON.stringify(content)
+);
+
+
+renderPipeline();
+
+}
+
+
+function renderPipeline(){
+
+let areas=[
+"idea",
+"script",
+"shoot",
+"edit",
+"published"
+];
+
+
+areas.forEach(a=>{
+document.getElementById(a).innerHTML="";
+});
+
+
+content.forEach(item=>{
+
+let id=item.stage.toLowerCase();
+
+if(document.getElementById(id)){
+
+document.getElementById(id).innerHTML +=
+`
+<div class="contentCard">
+<b>${item.name}</b>
+</div>
+`;
+
+}
+
+});
+
+}
+
+
+renderPipeline();
+</script>
+
+</body>
+</html>
