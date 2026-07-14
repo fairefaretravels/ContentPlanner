@@ -122,6 +122,127 @@ margin-top:10px;
 border-radius:8px;
 border-left:5px solid var(--brown);
 }
+
+  .asset{
+background:#fff3c4;
+padding:12px;
+margin-top:10px;
+border-radius:10px;
+border-left:5px solid var(--brown);
+}
+
+.asset b{
+color:var(--brown);
+}
+
+  .sheet{
+background:#fff3c4;
+padding:15px;
+margin-top:10px;
+border-radius:12px;
+border-left:6px solid var(--brown);
+}
+
+.sheet h3{
+margin:0;
+color:var(--brown);
+}
+
+  .scheduleItem{
+
+background:#fff3c4;
+padding:12px;
+margin-top:10px;
+border-radius:10px;
+border-left:6px solid var(--brown);
+
+}
+
+.scheduleItem strong{
+
+color:var(--brown);
+
+}
+
+  .talentCard{
+
+background:#fff3c4;
+padding:15px;
+margin-top:10px;
+border-radius:12px;
+border-left:6px solid var(--brown);
+
+}
+
+.talentCard strong{
+
+color:var(--brown);
+
+}
+
+ .dealCard{
+
+background:#fff3c4;
+padding:15px;
+margin-top:10px;
+border-radius:12px;
+border-left:6px solid var(--green);
+
+}
+
+.dealCard strong{
+
+color:var(--brown);
+
+} 
+
+ .analyticsCard{
+
+background:#fff3c4;
+padding:15px;
+margin-top:10px;
+border-radius:12px;
+border-left:6px solid var(--sunflower);
+
+} 
+
+  .taskCard{
+
+background:#fff3c4;
+padding:15px;
+margin-top:10px;
+border-radius:12px;
+border-left:6px solid var(--brown);
+
+}
+
+.taskCard strong{
+
+color:var(--brown);
+
+}
+
+.priority{
+
+font-weight:bold;
+
+}
+
+  .releaseCard{
+
+background:#fff3c4;
+padding:15px;
+margin-top:10px;
+border-radius:12px;
+border-left:6px solid var(--green);
+
+}
+
+.releaseCard strong{
+
+color:var(--brown);
+
+}
 </style>
 
 </head>
@@ -162,7 +283,10 @@ GO LIVE
 STANDBY
 </button>
 
-  <div class="card">
+</div>
+
+
+<div class="card">
 
 <h2>📰 Newsroom Pipeline</h2>
 
@@ -205,6 +329,16 @@ STANDBY
 <div class="stage">
 <h3>✂️ EDIT</h3>
 <div id="edit"></div>
+</div>
+
+  <div class="stage">
+<h3>🎨 THUMBNAIL</h3>
+<div id="thumbnail"></div>
+</div>
+
+<div class="stage">
+<h3>📅 SCHEDULE</h3>
+<div id="schedule"></div>
 </div>
 
 <div class="stage">
@@ -286,11 +420,356 @@ ONLINE
 
 </div>
 
+  <div class="card">
+
+<h2>🗄️ STV Media Vault</h2>
+
+<p>Asset Name</p>
+<input id="assetName" placeholder="Example: Cruise Muse Episode 01">
+
+<p>Asset Type</p>
+
+<select id="assetType">
+
+<option>Video</option>
+<option>Photo</option>
+<option>Music</option>
+<option>Document</option>
+<option>Graphic</option>
+
+</select>
+
+
+<p>Link / Location</p>
+
+<input id="assetLink" placeholder="Cloudinary, Drive, GitHub, Folder Link">
+
+
+<button onclick="addAsset()">
++ ADD ASSET
+</button>
+
+
+<div id="vault"></div>
+
 
 </div>
 
 
+</div>
 
+<div class="card">
+
+<h2>🎬 Showrunner Episode Sheet</h2>
+
+<input id="season" placeholder="Season (Example: Season 1)">
+
+<input id="episodeNumber" placeholder="Episode Number">
+
+<input id="host" placeholder="Host">
+
+<input id="guest" placeholder="Guest / Featured Person">
+
+<input id="storyArc" placeholder="Story Arc">
+
+
+<textarea id="shotList"
+placeholder="Shot List:
+1.
+2.
+3."></textarea>
+
+
+<textarea id="productionNotes"
+placeholder="Production Notes"></textarea>
+
+
+<h3>Production Checklist</h3>
+
+<label>
+<input type="checkbox" id="scriptCheck">
+ Script Complete
+</label>
+
+<br>
+
+<label>
+<input type="checkbox" id="shootCheck">
+ Shoot Complete
+</label>
+
+<br>
+
+<label>
+<input type="checkbox" id="editCheck">
+ Edit Complete
+</label>
+
+<br>
+
+<label>
+<input type="checkbox" id="publishCheck">
+ Published
+</label>
+
+
+<br><br>
+
+<button onclick="saveEpisodeSheet()">
+SAVE EPISODE SHEET
+</button>
+
+
+<div id="episodeSheets"></div>
+
+</div>
+
+  <div class="card">
+
+<h2>📺 STV Network Scheduler</h2>
+
+<input id="scheduleTitle" placeholder="Program Name">
+
+<input id="scheduleTime" placeholder="Time Slot (Example: 7:00 PM)">
+
+<select id="scheduleChannel">
+
+<option>STV Channel 1</option>
+<option>STV Radiomeltdown</option>
+<option>STV Live Events</option>
+<option>STV On Demand</option>
+
+</select>
+
+
+<select id="scheduleType">
+
+<option>Premiere</option>
+<option>Live</option>
+<option>Replay</option>
+<option>Simulcast</option>
+
+</select>
+
+
+<button onclick="addSchedule()">
++ ADD PROGRAM
+</button>
+
+
+<div id="scheduleList"></div>
+
+
+</div>
+
+  <div class="card">
+
+<h2>🎙 STV Talent Center</h2>
+
+<input id="talentName" placeholder="Name">
+
+<input id="talentRole" placeholder="Role (Artist, Guest, Host, Expert)">
+
+
+<input id="talentShow" placeholder="Associated Show">
+
+
+<select id="talentStatus">
+
+<option>Potential</option>
+<option>Contacted</option>
+<option>Confirmed</option>
+<option>Recorded</option>
+<option>Published</option>
+
+</select>
+
+
+<textarea id="talentNotes"
+placeholder="Notes, bio, talking points..."></textarea>
+
+
+<button onclick="addTalent()">
++ ADD TALENT
+</button>
+
+
+<div id="talentList"></div>
+
+
+</div>
+
+  <div class="card">
+
+<h2>💰 STV Revenue Command Center</h2>
+
+<input id="clientName" placeholder="Sponsor / Client Name">
+
+<input id="dealName" placeholder="Campaign or Package">
+
+<input id="dealAmount" placeholder="Amount ($)">
+
+
+<select id="dealStatus">
+
+<option>Lead</option>
+<option>Proposal Sent</option>
+<option>Negotiating</option>
+<option>Signed</option>
+<option>Paid</option>
+
+</select>
+
+
+<input id="dealDate" type="date">
+
+
+<textarea id="dealNotes"
+placeholder="Notes, deliverables, payment terms..."></textarea>
+
+
+<button onclick="addDeal()">
++ ADD DEAL
+</button>
+
+
+<div id="dealList"></div>
+
+
+<h3>
+Total Revenue:
+$<span id="totalRevenue">0</span>
+</h3>
+
+
+</div>
+
+  <div class="card">
+
+<h2>📊 STV Analytics Command Center</h2>
+
+<input id="analyticsShow" placeholder="Show Name">
+
+<input id="views" placeholder="Views">
+
+<input id="listeners" placeholder="Listeners">
+
+<input id="watchTime" placeholder="Watch Time (minutes)">
+
+<input id="socialReach" placeholder="Social Reach">
+
+
+<button onclick="addAnalytics()">
++ ADD REPORT
+</button>
+
+
+<div id="analyticsList"></div>
+
+
+<h3>
+Total Views:
+<span id="totalViews">0</span>
+</h3>
+
+
+<h3>
+Total Listeners:
+<span id="totalListeners">0</span>
+</h3>
+
+
+</div>
+
+  <div class="card">
+
+<h2>👥 STV Team Operations</h2>
+
+<input id="teamMember" placeholder="Team Member Name">
+
+<input id="teamRole" placeholder="Role (Producer, Editor, Host...)">
+
+
+<input id="taskName" placeholder="Assigned Task">
+
+
+<select id="taskStatus">
+
+<option>Assigned</option>
+<option>In Progress</option>
+<option>Review</option>
+<option>Complete</option>
+
+</select>
+
+
+<select id="priority">
+
+<option>Normal</option>
+<option>Important</option>
+<option>Urgent</option>
+
+</select>
+
+
+<button onclick="addTask()">
++ ASSIGN TASK
+</button>
+
+
+<div id="teamTasks"></div>
+
+
+</div>
+
+  <div class="card">
+
+<h2>🚀 STV Digital Distribution Hub</h2>
+
+<input id="contentTitle" placeholder="Content Title">
+
+
+<select id="platform">
+
+<option>YouTube</option>
+<option>TikTok</option>
+<option>Instagram</option>
+<option>Facebook</option>
+<option>Podcast</option>
+<option>Website</option>
+<option>Newsletter</option>
+
+</select>
+
+
+<input id="publishLink" placeholder="Published Link">
+
+
+<select id="publishStatus">
+
+<option>Draft</option>
+<option>Scheduled</option>
+<option>Published</option>
+
+</select>
+
+
+<input id="publishDate" type="date">
+
+
+<textarea id="publishNotes"
+placeholder="Caption, description, hashtags, press notes..."></textarea>
+
+
+<button onclick="addDistribution()">
++ ADD RELEASE
+</button>
+
+
+<div id="distributionList"></div>
+
+
+</div>
 <script>
 
 let episodes =
@@ -424,6 +903,8 @@ let areas=[
 "script",
 "shoot",
 "edit",
+"thumbnail",
+"schedule",
 "published"
 ];
 
@@ -454,6 +935,762 @@ document.getElementById(id).innerHTML +=
 
 
 renderPipeline();
+let assets =
+JSON.parse(localStorage.getItem("stvVault")) || [];
+
+
+function addAsset(){
+
+let name =
+document.getElementById("assetName").value;
+
+
+let type =
+document.getElementById("assetType").value;
+
+
+let link =
+document.getElementById("assetLink").value;
+
+
+assets.push({
+name:name,
+type:type,
+link:link
+});
+
+
+localStorage.setItem(
+"stvVault",
+JSON.stringify(assets)
+);
+
+
+renderVault();
+
+}
+
+
+
+function renderVault(){
+
+let box =
+document.getElementById("vault");
+
+
+box.innerHTML="";
+
+
+assets.forEach(asset=>{
+
+box.innerHTML +=
+
+`
+<div class="asset">
+
+<b>${asset.type}</b>
+<br>
+
+${asset.name}
+
+<br>
+
+<a href="${asset.link}" target="_blank">
+Open Asset
+</a>
+
+</div>
+
+`;
+
+});
+
+
+}
+
+
+renderVault();
+
+  let sheets =
+JSON.parse(localStorage.getItem("stvSheets")) || [];
+
+
+function saveEpisodeSheet(){
+
+let sheet={
+
+season:
+document.getElementById("season").value,
+
+episode:
+document.getElementById("episodeNumber").value,
+
+host:
+document.getElementById("host").value,
+
+guest:
+document.getElementById("guest").value,
+
+story:
+document.getElementById("storyArc").value,
+
+shots:
+document.getElementById("shotList").value,
+
+notes:
+document.getElementById("productionNotes").value,
+
+status:{
+script:
+document.getElementById("scriptCheck").checked,
+
+shoot:
+document.getElementById("shootCheck").checked,
+
+edit:
+document.getElementById("editCheck").checked,
+
+publish:
+document.getElementById("publishCheck").checked
+
+}
+
+};
+
+
+sheets.push(sheet);
+
+
+localStorage.setItem(
+"stvSheets",
+JSON.stringify(sheets)
+);
+
+
+renderSheets();
+
+}
+
+
+
+function renderSheets(){
+
+let box=
+document.getElementById("episodeSheets");
+
+box.innerHTML="";
+
+
+sheets.forEach(s=>{
+
+
+box.innerHTML +=`
+
+<div class="sheet">
+
+<h3>
+${s.season} - Episode ${s.episode}
+</h3>
+
+<p>
+Host: ${s.host}
+</p>
+
+<p>
+Guest: ${s.guest}
+</p>
+
+<p>
+Story: ${s.story}
+</p>
+
+</div>
+
+`;
+
+});
+
+
+}
+
+
+renderSheets();
+  let schedule =
+JSON.parse(localStorage.getItem("stvSchedule")) || [];
+
+
+
+function addSchedule(){
+
+let program = {
+
+title:
+document.getElementById("scheduleTitle").value,
+
+time:
+document.getElementById("scheduleTime").value,
+
+channel:
+document.getElementById("scheduleChannel").value,
+
+type:
+document.getElementById("scheduleType").value
+
+};
+
+
+schedule.push(program);
+
+
+localStorage.setItem(
+"stvSchedule",
+JSON.stringify(schedule)
+);
+
+
+renderSchedule();
+
+}
+
+
+
+function renderSchedule(){
+
+let box =
+document.getElementById("scheduleList");
+
+
+box.innerHTML="";
+
+
+schedule.forEach(show=>{
+
+
+box.innerHTML +=`
+
+<div class="scheduleItem">
+
+<strong>
+${show.time}
+</strong>
+
+<br>
+
+${show.title}
+
+<br>
+
+📺 ${show.channel}
+
+<br>
+
+🎬 ${show.type}
+
+</div>
+
+`;
+
+});
+
+
+}
+
+
+renderSchedule();
+
+let talent =
+JSON.parse(localStorage.getItem("stvTalent")) || [];
+
+
+
+function addTalent(){
+
+let person = {
+
+name:
+document.getElementById("talentName").value,
+
+role:
+document.getElementById("talentRole").value,
+
+show:
+document.getElementById("talentShow").value,
+
+status:
+document.getElementById("talentStatus").value,
+
+notes:
+document.getElementById("talentNotes").value
+
+};
+
+
+talent.push(person);
+
+
+localStorage.setItem(
+"stvTalent",
+JSON.stringify(talent)
+);
+
+
+renderTalent();
+
+}
+
+
+
+function renderTalent(){
+
+let box =
+document.getElementById("talentList");
+
+
+box.innerHTML="";
+
+
+talent.forEach(person=>{
+
+
+box.innerHTML +=`
+
+<div class="talentCard">
+
+<strong>
+${person.name}
+</strong>
+
+<br>
+
+🎤 ${person.role}
+
+<br>
+
+📺 ${person.show}
+
+<br>
+
+Status:
+${person.status}
+
+<br>
+
+${person.notes}
+
+</div>
+
+`;
+
+});
+
+
+}
+
+
+renderTalent();  
+
+  let deals =
+JSON.parse(localStorage.getItem("stvDeals")) || [];
+
+
+
+function addDeal(){
+
+let deal={
+
+client:
+document.getElementById("clientName").value,
+
+campaign:
+document.getElementById("dealName").value,
+
+amount:
+Number(document.getElementById("dealAmount").value),
+
+status:
+document.getElementById("dealStatus").value,
+
+date:
+document.getElementById("dealDate").value,
+
+notes:
+document.getElementById("dealNotes").value
+
+};
+
+
+deals.push(deal);
+
+
+localStorage.setItem(
+"stvDeals",
+JSON.stringify(deals)
+);
+
+
+renderDeals();
+
+}
+
+
+
+function renderDeals(){
+
+let box =
+document.getElementById("dealList");
+
+box.innerHTML="";
+
+let total=0;
+
+
+deals.forEach(deal=>{
+
+
+if(deal.status==="Paid"){
+
+total += deal.amount;
+
+}
+
+
+box.innerHTML +=`
+
+<div class="dealCard">
+
+<strong>
+${deal.client}
+</strong>
+
+<br>
+
+📺 ${deal.campaign}
+
+<br>
+
+💵 $${deal.amount}
+
+<br>
+
+Status:
+${deal.status}
+
+<br>
+
+${deal.date}
+
+</div>
+
+`;
+
+});
+
+
+document.getElementById("totalRevenue")
+.innerHTML=total;
+
+}
+
+
+renderDeals();
+
+  let analytics =
+JSON.parse(localStorage.getItem("stvAnalytics")) || [];
+
+
+
+function addAnalytics(){
+
+let report={
+
+show:
+document.getElementById("analyticsShow").value,
+
+views:
+Number(document.getElementById("views").value),
+
+listeners:
+Number(document.getElementById("listeners").value),
+
+watch:
+Number(document.getElementById("watchTime").value),
+
+reach:
+Number(document.getElementById("socialReach").value)
+
+};
+
+
+analytics.push(report);
+
+
+localStorage.setItem(
+"stvAnalytics",
+JSON.stringify(analytics)
+);
+
+
+renderAnalytics();
+
+}
+
+
+
+function renderAnalytics(){
+
+let box =
+document.getElementById("analyticsList");
+
+
+box.innerHTML="";
+
+
+let views=0;
+let listeners=0;
+
+
+analytics.forEach(item=>{
+
+
+views += item.views;
+listeners += item.listeners;
+
+
+box.innerHTML +=`
+
+<div class="analyticsCard">
+
+<b>${item.show}</b>
+
+<br>
+
+👀 Views:
+${item.views}
+
+<br>
+
+🎧 Listeners:
+${item.listeners}
+
+<br>
+
+⏱ Watch:
+${item.watch} minutes
+
+<br>
+
+📱 Reach:
+${item.reach}
+
+</div>
+
+`;
+
+});
+
+
+document.getElementById("totalViews")
+.innerHTML=views;
+
+
+document.getElementById("totalListeners")
+.innerHTML=listeners;
+
+
+}
+
+
+renderAnalytics();
+
+  let tasks =
+JSON.parse(localStorage.getItem("stvTasks")) || [];
+
+
+
+function addTask(){
+
+let task={
+
+member:
+document.getElementById("teamMember").value,
+
+role:
+document.getElementById("teamRole").value,
+
+task:
+document.getElementById("taskName").value,
+
+status:
+document.getElementById("taskStatus").value,
+
+priority:
+document.getElementById("priority").value
+
+};
+
+
+tasks.push(task);
+
+
+localStorage.setItem(
+"stvTasks",
+JSON.stringify(tasks)
+);
+
+
+renderTasks();
+
+}
+
+
+
+function renderTasks(){
+
+let box =
+document.getElementById("teamTasks");
+
+
+box.innerHTML="";
+
+
+tasks.forEach(item=>{
+
+
+box.innerHTML +=`
+
+<div class="taskCard">
+
+<strong>
+${item.member}
+</strong>
+
+<br>
+
+🎬 ${item.role}
+
+<br>
+
+📌 ${item.task}
+
+<br>
+
+Status:
+${item.status}
+
+<br>
+
+<span class="priority">
+Priority:
+${item.priority}
+</span>
+
+</div>
+
+`;
+
+});
+
+
+}
+
+
+renderTasks();
+
+  let releases =
+JSON.parse(localStorage.getItem("stvReleases")) || [];
+
+
+
+function addDistribution(){
+
+let release={
+
+title:
+document.getElementById("contentTitle").value,
+
+platform:
+document.getElementById("platform").value,
+
+link:
+document.getElementById("publishLink").value,
+
+status:
+document.getElementById("publishStatus").value,
+
+date:
+document.getElementById("publishDate").value,
+
+notes:
+document.getElementById("publishNotes").value
+
+};
+
+
+releases.push(release);
+
+
+localStorage.setItem(
+"stvReleases",
+JSON.stringify(releases)
+);
+
+
+renderReleases();
+
+}
+
+
+
+function renderReleases(){
+
+let box =
+document.getElementById("distributionList");
+
+
+box.innerHTML="";
+
+
+releases.forEach(item=>{
+
+
+box.innerHTML +=`
+
+<div class="releaseCard">
+
+<strong>
+${item.title}
+</strong>
+
+<br>
+
+📱 ${item.platform}
+
+<br>
+
+📅 ${item.date}
+
+<br>
+
+Status:
+${item.status}
+
+<br>
+
+<a href="${item.link}" target="_blank">
+View Release
+</a>
+
+</div>
+
+`;
+
+});
+
+
+}
+
+
+renderReleases();
 </script>
 
 </body>
