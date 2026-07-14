@@ -297,6 +297,40 @@ border-left:6px solid var(--brown);
 color:var(--brown);
 
 }
+
+.clock{
+font-size:42px;
+color:var(--gold);
+text-align:center;
+font-weight:bold;
+} 
+
+ .queueItem{
+
+background:#111827;
+padding:10px;
+margin-top:8px;
+border-radius:8px;
+border-left:4px solid var(--gold);
+
+}
+
+.currentPlay{
+
+color:var(--green);
+font-weight:bold;
+
+} 
+
+ .scheduleRow{
+
+background:#111827;
+padding:10px;
+margin-top:8px;
+border-radius:8px;
+border-left:4px solid var(--gold);
+
+} 
 </style>
 
 </head>
@@ -899,6 +933,154 @@ onkeyup="searchSTV()"
 
 <div id="searchResults"></div>
 
+
+</div>
+
+  <div class="box">
+
+<div class="header">
+PROGRAM CLOCK
+</div>
+
+<div class="body">
+
+<h2 id="currentProgram">
+STV CHANNEL
+</h2>
+
+<p>
+NOW PLAYING:
+<span id="nowPlaying">
+Standby
+</span>
+</p>
+
+
+<p>
+NEXT:
+<span id="nextProgram">
+No Program Scheduled
+</span>
+</p>
+
+
+<h1 id="clock">
+00:00:00
+</h1>
+
+
+</div>
+
+</div>
+
+  <div class="box">
+
+<div class="header">
+OPERATOR NOTES
+</div>
+
+<div class="body">
+
+<textarea 
+id="operatorNotes"
+placeholder="Production notes, cues, reminders..."
+></textarea>
+
+
+<button class="btn" onclick="saveNotes()">
+SAVE NOTES
+</button>
+
+</div>
+
+</div>
+
+  <div class="box">
+
+<div class="header">
+PLAYOUT CONTROL
+</div>
+
+<div class="body">
+
+<input 
+id="playlistItem"
+placeholder="Add program or segment"
+/>
+
+
+<button class="btn" onclick="addToQueue()">
++ ADD TO QUEUE
+</button>
+
+
+<button class="btn live" onclick="takeLive()">
+TAKE LIVE
+</button>
+
+
+<button class="btn" onclick="playNext()">
+PLAY NEXT
+</button>
+
+
+<button class="btn" onclick="clearQueue()">
+CLEAR QUEUE
+</button>
+
+
+<h3>
+CURRENT:
+</h3>
+
+<div id="currentPlay">
+Standby
+</div>
+
+
+<h3>
+QUEUE:
+</h3>
+
+<div id="playQueue"></div>
+
+
+</div>
+
+</div>
+
+  <div class="box">
+
+<div class="header">
+NETWORK SCHEDULE
+</div>
+
+<div class="body">
+
+<input id="showName" placeholder="Program Name">
+
+<input id="showTime" placeholder="Time (Example 7:00 PM)">
+
+
+<input id="showDuration" placeholder="Duration">
+
+<select id="showChannel">
+
+<option>STV Channel</option>
+<option>Radiomeltdown</option>
+<option>Live Events</option>
+
+</select>
+
+
+<button class="btn" onclick="addScheduleItem()">
++ ADD PROGRAM
+</button>
+
+
+<div id="networkSchedule"></div>
+
+</div>
 
 </div>
 <script>
@@ -2107,6 +2289,253 @@ ${item.info}
 
 
 }
+
+function updateClock(){
+
+const now = new Date();
+
+document.getElementById("clock")
+.innerHTML =
+now.toLocaleTimeString();
+
+}
+
+setInterval(updateClock,1000);
+
+updateClock();
+
+ function saveNotes(){
+
+localStorage.setItem(
+"stvOperatorNotes",
+document.getElementById("operatorNotes").value
+);
+
+alert("Notes Saved");
+
+}
+
+
+document.getElementById("operatorNotes").value =
+localStorage.getItem("stvOperatorNotes") || ""; 
+
+  let playQueue =
+JSON.parse(localStorage.getItem("stvQueue")) || [];
+
+
+let currentPlay =
+localStorage.getItem("stvCurrent") || "Standby";
+
+
+
+function addToQueue(){
+
+let item =
+document.getElementById("playlistItem").value;
+
+
+if(!item)return;
+
+
+playQueue.push(item);
+
+
+localStorage.setItem(
+"stvQueue",
+JSON.stringify(playQueue)
+);
+
+
+renderQueue();
+
+}
+
+
+
+function playNext(){
+
+if(playQueue.length === 0){
+
+currentPlay="Standby";
+
+}else{
+
+currentPlay =
+playQueue.shift();
+
+}
+
+
+localStorage.setItem(
+"stvCurrent",
+currentPlay
+);
+
+
+localStorage.setItem(
+"stvQueue",
+JSON.stringify(playQueue)
+);
+
+
+document.getElementById("currentPlay")
+.innerHTML=currentPlay;
+
+
+renderQueue();
+
+}
+
+
+
+function renderQueue(){
+
+let box =
+document.getElementById("playQueue");
+
+
+box.innerHTML="";
+
+
+playQueue.forEach((item,index)=>{
+
+
+box.innerHTML +=`
+
+<div class="queueItem">
+
+${index+1}. ${item}
+
+</div>
+
+`;
+
+});
+
+
+}
+
+
+function clearQueue(){
+
+playQueue=[];
+
+localStorage.setItem(
+"stvQueue",
+JSON.stringify(playQueue)
+);
+
+renderQueue();
+
+}
+
+
+
+function takeLive(){
+
+currentPlay="🔴 LIVE EVENT";
+
+localStorage.setItem(
+"stvCurrent",
+currentPlay
+);
+
+
+document.getElementById("currentPlay")
+.innerHTML=currentPlay;
+
+}
+
+
+
+document.getElementById("currentPlay")
+.innerHTML=currentPlay;
+
+
+renderQueue();
+
+  let networkSchedule =
+JSON.parse(localStorage.getItem("stvNetworkSchedule")) || [];
+
+
+
+function addScheduleItem(){
+
+let item={
+
+name:
+document.getElementById("showName").value,
+
+time:
+document.getElementById("showTime").value,
+
+duration:
+document.getElementById("showDuration").value,
+
+channel:
+document.getElementById("showChannel").value
+
+};
+
+
+networkSchedule.push(item);
+
+
+localStorage.setItem(
+"stvNetworkSchedule",
+JSON.stringify(networkSchedule)
+);
+
+
+renderNetworkSchedule();
+
+}
+
+
+
+function renderNetworkSchedule(){
+
+let box =
+document.getElementById("networkSchedule");
+
+
+box.innerHTML="";
+
+
+networkSchedule.forEach(show=>{
+
+
+box.innerHTML +=`
+
+<div class="scheduleRow">
+
+<b>
+${show.time}
+</b>
+
+<br>
+
+${show.name}
+
+<br>
+
+📺 ${show.channel}
+
+<br>
+
+⏱ ${show.duration}
+
+</div>
+
+`;
+
+});
+
+
+}
+
+
+renderNetworkSchedule();
 </script>
 
 </body>
