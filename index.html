@@ -243,6 +243,60 @@ border-left:6px solid var(--green);
 color:var(--brown);
 
 }
+
+  .workflowCard{
+
+background:#fff3c4;
+padding:15px;
+margin-top:10px;
+border-radius:12px;
+border-left:6px solid var(--sunflower);
+
+}
+
+.workflowCard strong{
+
+color:var(--brown);
+
+}
+
+.checklist{
+
+margin-top:10px;
+
+}
+
+  .calendarCard{
+
+background:#fff3c4;
+padding:15px;
+margin-top:10px;
+border-radius:12px;
+border-left:6px solid var(--brown);
+
+}
+
+.calendarCard strong{
+
+color:var(--brown);
+
+}
+
+  .searchResult{
+
+background:#fff3c4;
+padding:12px;
+margin-top:10px;
+border-radius:10px;
+border-left:6px solid var(--brown);
+
+}
+
+.searchResult strong{
+
+color:var(--brown);
+
+}
 </style>
 
 </head>
@@ -767,6 +821,83 @@ placeholder="Caption, description, hashtags, press notes..."></textarea>
 
 
 <div id="distributionList"></div>
+
+
+</div>
+
+  <div class="card">
+
+<h2>⚙️ STV Automation Center</h2>
+
+<input id="projectName" placeholder="Project / Episode Name">
+
+
+<select id="templateType">
+
+<option>TV Episode</option>
+<option>Interview</option>
+<option>Live Show</option>
+<option>Short Clip</option>
+<option>Podcast</option>
+
+</select>
+
+
+<button onclick="createWorkflow()">
++ CREATE WORKFLOW
+</button>
+
+
+<div id="workflowList"></div>
+
+</div>
+
+  <div class="card">
+
+<h2>📅 STV Master Calendar</h2>
+
+<input id="calendarTitle" placeholder="Event / Production Name">
+
+<input id="calendarDate" type="date">
+
+
+<select id="calendarType">
+
+<option>Shoot Day</option>
+<option>Live Broadcast</option>
+<option>Interview</option>
+<option>Episode Release</option>
+<option>Sponsor Deadline</option>
+<option>Social Campaign</option>
+
+</select>
+
+
+<input id="calendarOwner" placeholder="Assigned To">
+
+
+<button onclick="addCalendarEvent()">
++ ADD EVENT
+</button>
+
+
+<div id="calendarList"></div>
+
+
+</div>
+
+  <div class="card">
+
+<h2>🔎 STV Intelligence Search</h2>
+
+<input 
+id="searchBox" 
+placeholder="Search episodes, guests, assets, deals..."
+onkeyup="searchSTV()"
+>
+
+
+<div id="searchResults"></div>
 
 
 </div>
@@ -1691,6 +1822,291 @@ View Release
 
 
 renderReleases();
+
+  let workflows =
+JSON.parse(localStorage.getItem("stvWorkflows")) || [];
+
+
+
+function createWorkflow(){
+
+let workflow={
+
+name:
+document.getElementById("projectName").value,
+
+type:
+document.getElementById("templateType").value,
+
+steps:[
+
+"📝 Script Complete",
+
+"🎥 Recording Complete",
+
+"🎧 Audio Checked",
+
+"✂️ Editing Complete",
+
+"🎨 Thumbnail Created",
+
+"📤 Uploaded",
+
+"📱 Promotion Posted"
+
+]
+
+};
+
+
+workflows.push(workflow);
+
+
+localStorage.setItem(
+"stvWorkflows",
+JSON.stringify(workflows)
+);
+
+
+renderWorkflows();
+
+}
+
+
+
+function renderWorkflows(){
+
+let box =
+document.getElementById("workflowList");
+
+
+box.innerHTML="";
+
+
+workflows.forEach((item,index)=>{
+
+
+box.innerHTML +=`
+
+<div class="workflowCard">
+
+<strong>
+${item.type}
+</strong>
+
+<br>
+
+${item.name}
+
+
+<div class="checklist">
+
+${item.steps.map(step=>`
+
+<label>
+<input type="checkbox">
+${step}
+</label>
+<br>
+
+`).join("")}
+
+</div>
+
+</div>
+
+`;
+
+});
+
+
+}
+
+
+renderWorkflows();
+
+  let calendarEvents =
+JSON.parse(localStorage.getItem("stvCalendar")) || [];
+
+
+
+function addCalendarEvent(){
+
+let event={
+
+title:
+document.getElementById("calendarTitle").value,
+
+date:
+document.getElementById("calendarDate").value,
+
+type:
+document.getElementById("calendarType").value,
+
+owner:
+document.getElementById("calendarOwner").value
+
+};
+
+
+calendarEvents.push(event);
+
+
+localStorage.setItem(
+"stvCalendar",
+JSON.stringify(calendarEvents)
+);
+
+
+renderCalendar();
+
+}
+
+
+
+function renderCalendar(){
+
+let box =
+document.getElementById("calendarList");
+
+
+box.innerHTML="";
+
+
+calendarEvents.sort(
+(a,b)=>new Date(a.date)-new Date(b.date)
+);
+
+
+calendarEvents.forEach(event=>{
+
+
+box.innerHTML +=`
+
+<div class="calendarCard">
+
+<strong>
+${event.title}
+</strong>
+
+<br>
+
+📅 ${event.date}
+
+<br>
+
+🎬 ${event.type}
+
+<br>
+
+👤 ${event.owner}
+
+</div>
+
+`;
+
+});
+
+
+}
+
+
+renderCalendar();
+
+  function searchSTV(){
+
+let query =
+document.getElementById("searchBox")
+.value
+.toLowerCase();
+
+
+let results=[];
+
+
+
+let allData=[
+
+...episodes.map(item=>({
+type:"Episode",
+name:item.title,
+info:item.desc
+})),
+
+...talent.map(item=>({
+type:"Talent",
+name:item.name,
+info:item.role
+})),
+
+...assets.map(item=>({
+type:"Asset",
+name:item.name,
+info:item.type
+})),
+
+...deals.map(item=>({
+type:"Revenue",
+name:item.client,
+info:item.campaign
+})),
+
+...calendarEvents.map(item=>({
+type:"Calendar",
+name:item.title,
+info:item.type
+}))
+
+];
+
+
+
+results =
+allData.filter(item=>
+
+item.name
+.toLowerCase()
+.includes(query)
+
+);
+
+
+
+let box =
+document.getElementById("searchResults");
+
+
+box.innerHTML="";
+
+
+
+results.forEach(item=>{
+
+
+box.innerHTML +=`
+
+<div class="searchResult">
+
+<strong>
+${item.type}
+</strong>
+
+<br>
+
+${item.name}
+
+<br>
+
+${item.info}
+
+</div>
+
+`;
+
+});
+
+
+}
 </script>
 
 </body>
